@@ -176,6 +176,9 @@ if __name__ == '__main__':
  * Running on http://192.168.0.71:5000
 ```
 
+<img width="725" height="100" alt="image" src="https://github.com/user-attachments/assets/b23aa67f-4168-4317-b127-290c5a33feb7" />
+
+
 **2.4. Тестирование API через Flask (порт 5000)**
 
 *Тест 1. Добавление контакта:*
