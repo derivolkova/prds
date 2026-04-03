@@ -85,6 +85,9 @@ Access-Control-Allow-Origin: *
   }
 }
 ```
+
+<img width="543" height="356" alt="image" src="https://github.com/user-attachments/assets/5a5984a8-7767-46ec-88f2-0b1267c0f0d2" />
+
 ***API возвращает актуальные данные о курсе Bitcoin в реальном времени. Для получения данных достаточно выполнить GET-запрос без аутентификации.***
 
 ### Часть 2. Разработка REST API "Контакты" на Flask
