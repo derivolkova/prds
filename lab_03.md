@@ -14,16 +14,28 @@
 
 lab7/
 ├── grpc_sync/
+
 │   ├── lab7_service.proto          -- Контракт с 3 методами
+
 │   ├── lab7_service_pb2.py         -- Сгенерированный код protobuf
+
 │   ├── lab7_service_pb2_grpc.py    -- Сгенерированный код gRPC
+
 │   └── grpc_server.py              -- Реализация логики методов
+
 │
+
 ├── rabbitmq_async/
+
 │   ├── docker-compose.yml          -- RabbitMQ
+
 │   ├── producer.py                 -- Парсит аргументы и шлёт в очередь
+
 │   └── consumer.py                 -- Читает очередь, парсит префикс, вызывает gRPC
+
 │
+
 └── README.md                       -- Отчет
+
 ##
 ##
