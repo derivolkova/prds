@@ -100,6 +100,17 @@ services:
       - RABBITMQ_DEFAULT_USER=user
       - RABBITMQ_DEFAULT_PASS=password
 ```
+**Запуск gRPS**
+
+```
+PS C:\Users\Alina\lab7\grpc_sync> python grpc_server.py
+```
+
+**Результат**
+
+```
+gRPC сервер запущен на порту 50051
+```
 
 **Запуск RabbitMQ** 
 
@@ -281,26 +292,11 @@ if __name__ == '__main__':
     main()
 ```
 
-
-## 📌
-
-
-
-
-
-
-🐰
-
-
-
-
-
-
-
-
 ## Задание 1. Обработка транзакций. Producer отправляет сумму. gRPC сервис проверяет, не превышает ли она лимит (например, 10000), и возвращает "APPROVED" или "DECLINED".
 
-```bash
+**Запрос в 3 терминале**
+
+```
 PS C:\Users\Alina\lab7\rabbitmq_async> python producer.py "transaction:5000" 
  [x] Отправлено: transaction:5000
 PS C:\Users\Alina\lab7\rabbitmq_async> python producer.py "transaction:10000" 
@@ -309,19 +305,65 @@ PS C:\Users\Alina\lab7\rabbitmq_async> python producer.py "transaction:15000"
  [x] Отправлено: transaction:15000
 ```
 
+**Результат (2 терминал)**
 
-
-
-
+```
+[*] Ожидание сообщений. Для выхода нажмите CTRL+C
+ [x] Получено: transaction:5000
+ [✓] Результат: Статус транзакции: APPROVED
+ [x] Получено: transaction:10000
+ [✓] Результат: Статус транзакции: APPROVED
+ [x] Получено: transaction:15000
+ [✓] Результат: Статус транзакции: DECLINED
+```
 
 ## Задание 2. Проверка палиндрома. Producer отправляет слово. gRPC сервис проверяет, является ли оно палиндромом, и возвращает True или False.
 
+**Запрос в 3 терминале**
 
+```
+PS C:\Users\Alina\lab7\rabbitmq_async> python producer.py "palindrome:казак"  
 
+ [x] Отправлено: palindrome:казак
+PS C:\Users\Alina\lab7\rabbitmq_async> python producer.py "palindrome:шалаш"   
 
+ [x] Отправлено: palindrome:шалаш
+PS C:\Users\Alina\lab7\rabbitmq_async> python producer.py "palindrome:привет"
+ [x] Отправлено: palindrome:привет
+```
+
+**Результат (2 терминал)**
+
+```
+ [x] Получено: palindrome:казак
+ [✓] Результат: Палиндром: True
+ [x] Получено: palindrome:шалаш
+ [✓] Результат: Палиндром: True
+ [x] Получено: palindrome:привет
+ [✓] Результат: Палиндром: False
+
+```
 
 ## Задание 3. Вычисление хэша. Producer отправляет строку. gRPC сервис вычисляет ее SHA256 хэш и возвращает его в hexвиде.
 
+**Запрос в 3 терминале**
+
+```
+PS C:\Users\Alina\lab7\rabbitmq_async> python producer.py "sha256:hello"       
+ [x] Отправлено: sha256:hello
+PS C:\Users\Alina\lab7\rabbitmq_async> python producer.py "sha256:hello world"
+ [x] Отправлено: sha256:hello world
+```
+
+**Результат (2 терминал)**
+
+```
+ [x] Получено: sha256:hello
+ [✓] Результат: SHA256: 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824
+ [x] Получено: sha256:hello world
+ [✓] Результат: SHA256: b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
+
+```
 
 
 
