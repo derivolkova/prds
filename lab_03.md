@@ -55,6 +55,64 @@ lab7/
 
 ---
 
+## 📌 Часть 2. Асинхронное взаимодействие (RabbitMQ + gRPC)
+
+**Схема:**
+
+   📤 Producer  ----> 🐰 RabbitMQ  ----> 📥 Consumer  ---->  ⚡gRPC Сервер
+   
+     (отправляет)        (очередь)          (забирает)         (обрабатывает)
+
+**Описание компонентов:**
+
+| Компонент | Что делает |
+
+|-----------|------------|
+
+| Producer | Отправляет задачи в очередь RabbitMQ. Форматы: transaction:5000, palindrome:казак, sha256:hello |
+
+| RabbitMQ | Брокер сообщений. Хранит очередь task_queue. Веб-интерфейс на порту 15672 |
+
+| Consumer | Забирает задачи из очереди, парсит префикс, вызывает gRPC сервер |
+
+| gRPC Сервер | Выполняет бизнес-логику на порту 50051, возвращает результат |
+
+**Преимущества асинхронного подхода:**
+- Producer не ждет обработки
+- При отключении Consumer сообщения копятся в очереди и не теряются
+- Можно запустить несколько ConsumerОВ.
+
+---
+
+**docker-compose.yml**
+
+```yaml
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+```
+
+**Запуск RabbitMQ** 
+
+``` bash
+cd rabbitmq_async
+docker-compose up -d
+```
+
+```
+http://localhost:15672
+ логин: user,
+ пароль: password
+```
+
 ## 📌
 
 ## 📌
