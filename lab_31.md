@@ -84,7 +84,20 @@ lab7/
 - Можно запустить несколько ConsumerОВ.
 
 ---
+**Докер**
 
+```yuml
+services:
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+```
 **Запуск gRPS**
 
 ```
