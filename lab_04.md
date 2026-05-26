@@ -30,3 +30,18 @@
     ▼
 **ОТВЕТ КЛИЕНТУ**
 ```
+
+### Генерация сертификатов и кюча Fernet
+
+```bash
+generate.bat
+```
+### Запуск компонентов
+
+| Компонент | Команда |
+|-----------|---------|
+| Сервер 1 | `python server.py 5001` |
+| Сервер 2 | `python server.py 5002` |
+| Координатор 1 | `python coordinator.py` |
+| Координатор 2 | `python coordinator2.py` |
+| Клиент | `python client_multi.py` |
