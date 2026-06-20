@@ -236,3 +236,52 @@ GROUP BY segment
 ORDER BY customers_count DESC
 LIMIT 10;
 ```
+
+
+
+<img width="1654" height="680" alt="image" src="https://github.com/user-attachments/assets/46ea4a1e-82a3-444b-8dd6-59839a5ea7a7" />
+
+
+```sql
+WITH monthly_sales AS (
+    SELECT 
+        s.product_id,
+        DATE_TRUNC('month', s.sales_transaction_date) AS sale_month,
+        AVG(s.sales_amount) AS avg_sale_price
+    FROM sales s
+    GROUP BY s.product_id, DATE_TRUNC('month', s.sales_transaction_date)
+),
+variance_data AS (
+    SELECT 
+        ms.product_id,
+        p.model,
+        ms.sale_month,
+        ms.avg_sale_price,
+        p.base_msrp,
+        ((ms.avg_sale_price - p.base_msrp) / p.base_msrp * 100) AS variance_pct
+    FROM monthly_sales ms
+    JOIN products p ON ms.product_id = p.product_id
+    WHERE p.base_msrp IS NOT NULL AND p.base_msrp != 0
+),
+classified AS (
+    SELECT 
+        *,
+        CASE 
+            WHEN variance_pct > 10 THEN 'Наценка'
+            WHEN variance_pct < -10 THEN 'Скидка'
+            ELSE 'В пределах нормы'
+        END AS price_status
+    FROM variance_data
+)
+SELECT 
+    product_id,
+    model,
+    sale_month,
+    avg_sale_price,
+    base_msrp,
+    variance_pct,
+    price_status
+FROM classified
+ORDER BY ABS(variance_pct) DESC
+LIMIT 10;
+```
