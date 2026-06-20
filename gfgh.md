@@ -191,7 +191,8 @@ except ValueError as e:
 
 
 
-<img width="1028" height="721" alt="image" src="https://github.com/user-attachments/assets/eca8c8f0-924e-45f2-85ec-e90ba9251207" />
+<img width="1095" height="918" alt="image" src="https://github.com/user-attachments/assets/830ab29c-8174-476d-8189-d64c233169b8" />
+
 
 
 ```sql
