@@ -171,7 +171,7 @@ try:
     print(predict_users(users, m))
 except ValueError as e:
     print(e)
-```\
+```
 
 
 
