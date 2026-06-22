@@ -36,16 +36,11 @@ while True:
     line = input().strip()
     if line == "END":
         break
-    parts = line.split(",")
-    store_id = int(parts[0].strip())
-    region = parts[1].strip()
-    amount = float(parts[2].strip())
-    key = (store_id, region)
-    if key in sales_dict:
-        sales_dict[key] += amount
-    else:
-        sales_dict[key] = amount
-
+   
+    shop_id, region, amount = line.split(',')
+    key = (shop_id, region)
+    sales_dict[key] = sales_dict.get(key, 0.0) + float(amount)
+   
 for key in sorted(sales_dict.keys()):
     print(f"Магазин: {key[0]}, Регион: {key[1]} - Выручка: {sales_dict[key]}")
 ```
