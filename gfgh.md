@@ -142,9 +142,7 @@ transactions_input = input().strip().split(',')
 blacklist_set = set(blacklist_input)
 blocked_count = 0
 
-for transaction in transactions_input:
-    if transaction in blacklist_set:
-        blocked_count += 1
+blocked_count = sum(1 for tx in transactions_input if tx in blacklist_input)
 
 print(f"Заблокировано транзакций: {blocked_count}")
 ```
