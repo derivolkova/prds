@@ -116,16 +116,15 @@ for c in campaigns:
 def calculate_final_price(base_price, *args, **kwargs):
     price = base_price
     for discount in args:
-        price *= (1 - discount / 100)
-    for amount in kwargs.values():
-        price -= amount
-    return price
-
-price = float(input())
+        price *= 1-discount / 100
+    for dedaction in kwargs.values():
+        price -= dedaction 
+    return price 
+    
+price = float(input()) 
 percents_input = input().strip()
-percents = [float(x) for x in percents_input.split(',')] if percents_input else []
-
-print(f"Итог: {calculate_final_price(price, *percents, promo=500, cashbac
+percents = [float(x) for x in percents_input.split(',')] if percents_input else [] 
+print(f"Итог: {calculate_final_price(price, *percents, promo=500, cashback=200):.2f}")
 ```
 
 <img width="829" height="603" alt="image" src="https://github.com/user-attachments/assets/3a667a59-29c1-4bb4-b774-0fd12359bb61" />
