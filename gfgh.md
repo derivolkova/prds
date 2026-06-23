@@ -256,23 +256,36 @@ LIMIT 10;
 <img width="1763" height="744" alt="image" src="https://github.com/user-attachments/assets/7b746a97-71ae-4944-9005-49d071fbe9a4" />
 
 ```sql
-SELECT
+WITH last_purchase_date AS (
+    SELECT 
+        customer_id,
+        MAX(sales_transaction_date) AS last_purchase
+    FROM sales
+    WHERE sales_transaction_date <= '2019-12-31'
+    GROUP BY customer_id
+),
+last_email_open_date AS (
+    SELECT 
+        customer_id,
+        MAX(opened_date) AS last_email_open
+    FROM emails
+    WHERE opened_date IS NOT NULL
+    GROUP BY customer_id
+)
+SELECT 
     c.customer_id,
     c.first_name,
     c.last_name,
     c.email,
-    MAX(s.sales_transaction_date) AS last_purchase,
-    MAX(e.opened_date) AS last_email_open
+    lpd.last_purchase,
+    leod.last_email_open
 FROM customers c
-JOIN sales s ON c.customer_id = s.customer_id
-JOIN emails e ON c.customer_id = e.customer_id
-WHERE s.sales_transaction_date <= '2019-12-31'
-    AND e.opened_date IS NOT NULL
-GROUP BY c.customer_id, c.first_name, c.last_name, c.email
-HAVING
-    ('2019-12-31'::date - MAX(s.sales_transaction_date)::date) > 180
-    AND MAX(e.opened_date) > MAX(s.sales_transaction_date)
-ORDER BY last_email_open
+JOIN last_purchase_date lpd ON c.customer_id = lpd.customer_id
+JOIN last_email_open_date leod ON c.customer_id = leod.customer_id
+WHERE 
+    EXTRACT(DAY FROM ('2019-12-31' - lpd.last_purchase)) > 180
+    AND leod.last_email_open > lpd.last_purchase
+ORDER BY leod.last_email_open DESC
 LIMIT 10;
 ```
 <img width="1529" height="856" alt="image" src="https://github.com/user-attachments/assets/19262e5b-3a61-476a-bf43-8209e3be83ec" />
