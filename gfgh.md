@@ -313,3 +313,28 @@ GROUP BY state, product_type
 ORDER BY state, record_type DESC, product_type
 limit 10
 ```
+
+
+
+<img width="1763" height="744" alt="image" src="https://github.com/user-attachments/assets/7b746a97-71ae-4944-9005-49d071fbe9a4" />
+
+```sql
+SELECT
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    c.email,
+    MAX(s.sales_transaction_date) AS last_purchase,
+    MAX(e.opened_date) AS last_email_open
+FROM customers c
+JOIN sales s ON c.customer_id = s.customer_id
+JOIN emails e ON c.customer_id = e.customer_id
+WHERE s.sales_transaction_date <= '2019-12-31'
+    AND e.opened_date IS NOT NULL
+GROUP BY c.customer_id, c.first_name, c.last_name, c.email
+HAVING
+    ('2019-12-31'::date - MAX(s.sales_transaction_date)::date) > 180
+    AND MAX(e.opened_date) > MAX(s.sales_transaction_date)
+ORDER BY MAX(e.opened_date) DESC
+LIMIT 10;
+```
