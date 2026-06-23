@@ -183,22 +183,14 @@ except ValueError as e:
 
 
 ```sql
-WITH rfm AS (
+WITH scores AS (
     SELECT
-        customer_id,
-        DATE '2019-12-31' - MAX(sales_transaction_date)::date AS recency,
-        COUNT(*) AS frequency,
-        SUM(sales_amount) AS monetary
+        SUM(sales_amount) AS monetary,
+        NTILE(5) OVER (ORDER BY (DATE '2019-12-31' - MAX(sales_transaction_date)::date) DESC) AS r_score,
+        NTILE(5) OVER (ORDER BY COUNT(*) ASC) AS f_score,
+        NTILE(5) OVER (ORDER BY SUM(sales_amount) ASC) AS m_score
     FROM sales
     GROUP BY customer_id
-),
-scores AS (
-    SELECT
-        monetary,
-        NTILE(5) OVER (ORDER BY recency DESC) AS r_score,
-        NTILE(5) OVER (ORDER BY frequency ASC) AS f_score,
-        NTILE(5) OVER (ORDER BY monetary ASC) AS m_score
-    FROM rfm
 )
 SELECT
     CONCAT('R', r_score, '_F', f_score, '_M', m_score) AS segment,
