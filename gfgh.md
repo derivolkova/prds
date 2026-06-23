@@ -183,43 +183,29 @@ except ValueError as e:
 
 
 ```sql
-WITH rfm_raw AS (
-    SELECT
-        c.customer_id,
-        EXTRACT(DAY FROM ('2019-12-31' - MAX(s.sales_transaction_date))) AS recency,
-        COUNT(*) AS frequency,
-        SUM(s.sales_amount) AS monetary
-    FROM customers c
-    JOIN sales s ON c.customer_id = s.customer_id
-    GROUP BY c.customer_id
-),
-rfm_scores AS (
+WITH rfm AS (
     SELECT
         customer_id,
-        recency,
-        frequency,
+        DATE '2019-12-31' - MAX(sales_transaction_date)::date AS recency,
+        COUNT(*) AS frequency,
+        SUM(sales_amount) AS monetary
+    FROM sales
+    GROUP BY customer_id
+),
+scores AS (
+    SELECT
         monetary,
         NTILE(5) OVER (ORDER BY recency DESC) AS r_score,
         NTILE(5) OVER (ORDER BY frequency ASC) AS f_score,
         NTILE(5) OVER (ORDER BY monetary ASC) AS m_score
-    FROM rfm_raw
-),
-rfm_segments AS (
-    SELECT
-        customer_id,
-        r_score,
-        f_score,
-        m_score,
-        CONCAT('R', r_score, '_F', f_score, '_M', m_score) AS segment,
-        monetary
-    FROM rfm_scores
+    FROM rfm
 )
 SELECT
-    segment,
-    COUNT(customer_id) AS customers_count,
-    CAST(AVG(monetary) AS NUMERIC(10, 2)) AS avg_segment_monetary
-FROM rfm_segments
-GROUP BY segment
+    CONCAT('R', r_score, '_F', f_score, '_M', m_score) AS segment,
+    COUNT(*) AS customers_count,
+    ROUND(AVG(monetary)::numeric, 2) AS avg_segment_monetary
+FROM scores
+GROUP BY r_score, f_score, m_score
 ORDER BY customers_count DESC
 LIMIT 10;
 ```
