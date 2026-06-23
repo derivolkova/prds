@@ -272,3 +272,58 @@ FROM classified
 ORDER BY ABS(variance_pct) DESC
 LIMIT 10;
 ```
+
+
+
+
+<img width="1780" height="862" alt="image" src="https://github.com/user-attachments/assets/13840ed3-5197-447c-b0eb-68951bf42598" />
+
+```sql
+WITH base AS (
+    SELECT
+        s.sales_amount,
+        p.product_type,
+        COALESCE(d.state, c.state) AS state
+    FROM sales s
+    LEFT JOIN dealerships d ON s.dealership_id = d.dealership_id AND s.channel = 'dealership'
+    LEFT JOIN customers c ON s.customer_id = c.customer_id AND s.channel = 'internet'
+    JOIN products p ON s.product_id = p.product_id
+    WHERE s.sales_transaction_date BETWEEN '2019-01-01' AND '2019-12-31'
+),
+stats AS (
+    SELECT
+        state,
+        SUM(sales_amount) AS total_sales,
+        COUNT(*) AS transactions_count,
+        AVG(sales_amount) AS avg_check,
+        RANK() OVER (ORDER BY SUM(sales_amount) DESC) AS sales_rank
+    FROM base
+    GROUP BY state
+)
+SELECT
+    'State General' AS record_type,
+    state,
+    NULL AS product_type,
+    total_sales,
+    transactions_count,
+    avg_check,
+    sales_rank
+FROM stats
+WHERE sales_rank <= 3
+
+UNION ALL
+
+SELECT
+    'Product Detail',
+    state,
+    product_type,
+    SUM(sales_amount),
+    NULL,
+    NULL,
+    NULL
+FROM base
+WHERE state IN (SELECT state FROM stats WHERE sales_rank <= 3)
+GROUP BY state, product_type
+ORDER BY state, record_type DESC, product_type
+limit 10
+```
