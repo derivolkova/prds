@@ -288,11 +288,11 @@ SELECT
     CONCAT(sp.first_name, ' ', sp.last_name) AS full_name,
     SUM(s.sales_amount) AS total_sales,
     RANK() OVER (ORDER BY SUM(s.sales_amount) DESC) AS sales_rank,
-    SUM(s.sales_amount) / COUNT(*) AS avg_check,
+    AVG(s.sales_amount) AS avg_check,
     COUNT(DISTINCT s.product_id) AS unique_products,
     EXTRACT(YEAR FROM AGE('2019-12-31', sp.hire_date)) * 12 + EXTRACT(MONTH FROM AGE('2019-12-31', sp.hire_date)) AS tenure_months
 FROM salespeople sp
-INNER JOIN sales s ON sp.dealership_id = s.dealership_id
+INNER JOIN sales s USING(dealership_id)
 WHERE sp.termination_date IS NULL AND s.sales_transaction_date <= '2019-12-31'
 GROUP BY sp.salesperson_id, sp.first_name, sp.last_name, sp.hire_date
 ORDER BY sales_rank
