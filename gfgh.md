@@ -226,8 +226,8 @@ SELECT
     'В пределах нормы' AS price_status
 FROM sales s
 JOIN products p USING(product_id)
-GROUP BY p.product_id, p.model, p.base_msrp, DATE_TRUNC('month', s.sales_transaction_date)
-ORDER BY ABS(((AVG(s.sales_amount) - p.base_msrp) / p.base_msrp) * 100) DESC
+GROUP BY p.product_id, p.model, p.base_msrp, sale_month
+ORDER BY variance_pct
 LIMIT 10;
 ```
 
