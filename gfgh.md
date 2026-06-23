@@ -1,4 +1,4 @@
-<img width="439" height="260" alt="image" src="https://github.com/user-attachments/assets/a4e5d861-b56f-4497-a9a7-841877105db3" />
+
 <img width="831" height="606" alt="image" src="https://github.com/user-attachments/assets/e4c7f055-aa17-4620-a63c-05d6cc52811c" />
 
 ```python
