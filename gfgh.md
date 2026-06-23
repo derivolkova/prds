@@ -1,4 +1,4 @@
-
+<img width="439" height="260" alt="image" src="https://github.com/user-attachments/assets/a4e5d861-b56f-4497-a9a7-841877105db3" />
 <img width="831" height="606" alt="image" src="https://github.com/user-attachments/assets/e4c7f055-aa17-4620-a63c-05d6cc52811c" />
 
 ```python
@@ -338,3 +338,25 @@ HAVING
 ORDER BY MAX(e.opened_date) DESC
 LIMIT 10;
 ```
+<img width="1529" height="856" alt="image" src="https://github.com/user-attachments/assets/19262e5b-3a61-476a-bf43-8209e3be83ec" />
+
+```sql
+SELECT
+    CONCAT(sp.first_name, ' ', sp.last_name) AS full_name,
+    SUM(s.sales_amount) AS total_sales,
+    RANK() OVER (ORDER BY SUM(s.sales_amount) DESC) AS sales_rank,
+    SUM(s.sales_amount) / COUNT(*) AS avg_check,
+    COUNT(DISTINCT s.product_id) AS unique_products,
+    EXTRACT(YEAR FROM AGE('2019-12-31', sp.hire_date)) * 12 + EXTRACT(MONTH FROM AGE('2019-12-31', sp.hire_date)) AS tenure_months
+FROM salespeople sp
+INNER JOIN sales s ON sp.dealership_id = s.dealership_id
+    AND s.sales_transaction_date <= '2019-12-31'
+WHERE sp.termination_date IS NULL
+GROUP BY sp.salesperson_id, sp.first_name, sp.last_name, sp.hire_date
+ORDER BY sales_rank
+LIMIT 5;
+```
+
+
+
+
