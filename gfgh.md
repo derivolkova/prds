@@ -300,8 +300,7 @@ SELECT
     EXTRACT(YEAR FROM AGE('2019-12-31', sp.hire_date)) * 12 + EXTRACT(MONTH FROM AGE('2019-12-31', sp.hire_date)) AS tenure_months
 FROM salespeople sp
 INNER JOIN sales s ON sp.dealership_id = s.dealership_id
-    AND s.sales_transaction_date <= '2019-12-31'
-WHERE sp.termination_date IS NULL
+WHERE sp.termination_date IS NULL AND s.sales_transaction_date <= '2019-12-31'
 GROUP BY sp.salesperson_id, sp.first_name, sp.last_name, sp.hire_date
 ORDER BY sales_rank
 LIMIT 5;
