@@ -307,7 +307,7 @@ GROUP BY c.customer_id, c.first_name, c.last_name, c.email
 HAVING
     ('2019-12-31'::date - MAX(s.sales_transaction_date)::date) > 180
     AND MAX(e.opened_date) > MAX(s.sales_transaction_date)
-ORDER BY MAX(e.opened_date) DESC
+ORDER BY last_email_open
 LIMIT 10;
 ```
 <img width="1529" height="856" alt="image" src="https://github.com/user-attachments/assets/19262e5b-3a61-476a-bf43-8209e3be83ec" />
